@@ -1,0 +1,19 @@
+{
+  "muhurlu-bogaz-kelepcesi": {
+    "Blocked": "{actor}, {collar} takılıyken büyü yapamaz ve büyü gerektiren eylemleri kullanamaz.",
+    "NoAttune": "{actor}, {collar} takılıyken hiçbir eşyaya attune olamaz.",
+    "LockedModify": "{collar} kilitli; yalnızca GM çıkarabilir veya değiştirebilir.",
+    "LockedDelete": "{collar} kilitli; yalnızca GM silebilir.",
+    "Sheet": {
+      "Legend": "Mühürlü Boğaz Kelepçesi",
+      "Label": "Büyüyü mühürler",
+      "Hint": "Takılıyken taşıyıcı büyü yapamaz, attune olamaz; devam eden concentration biter. Oyuncular çıkaramaz."
+    },
+    "Settings": {
+      "BlockMagicItems": {
+        "Name": "Sihirli eşyaları da engelle",
+        "Hint": "Açıksa kelepçe takılıyken sihirli (Magical özellikli) eşyaların bütün aktiviteleri de engellenir. Kapalıysa yalnızca büyüler ve büyü gerektiren aktiviteler engellenir."
+      }
+    }
+  }
+}
