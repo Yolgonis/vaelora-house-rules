@@ -2,7 +2,7 @@
   "id": "soz-agizdan-bir-kere-cikar",
   "title": "Consequences",
   "description": "D&D 5e için ihlal, geri alma d100 tablosu ve kalıcı Kesinti Cezası yönetimi.",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
   "license": "LICENSE",
@@ -13,8 +13,7 @@
   ],
   "compatibility": {
     "minimum": "13",
-    "verified": "13",
-    "maximum": "13"
+    "verified": "13.351"
   },
   "relationships": {
     "systems": [

@@ -1,5 +1,9 @@
 # Değişiklik Günlüğü
 
+## 1.2.4 — 2026-10-13
+
+- Foundry uyumluluğundaki `maximum: 13` sınırı kaldırıldı; Foundry v14'e geçildiğinde modül otomatik devre dışı kalmaz. Doğrulanan sürüm 13.351.
+
 ## 1.2.3 — 2026-08-29
 
 - Karakter kâğıdının üst kısmındaki Kesinti göstergesi tamamen kaldırıldı.
