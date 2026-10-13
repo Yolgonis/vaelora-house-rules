@@ -1,0 +1,30 @@
+{
+  "id": "muhurlu-bogaz-kelepcesi",
+  "title": "Spell-Suppressing Collar Lock",
+  "description": "Blocks D&D 5e spells and magic-required activities, removes attunements, and prevents players from removing the equipped Spell-Suppressing Collar.",
+  "version": "1.2.0",
+  "authors": [
+    {
+      "name": "Yolgonis"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13.351",
+    "verified": "13.351"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.3.3",
+          "verified": "5.3.3"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/lock.mjs"
+  ]
+}
