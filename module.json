@@ -1,0 +1,29 @@
+{
+  "id": "enhanced-recovery",
+  "title": "Enhanced Recovery",
+  "description": "D&D 5e için GM kontrollü otomatik iyileşme sistemi. Recovery gerçek sheet sekmesi olarak ayrıldı ve diğer sekmelerle üst üste binme düzeltildi.",
+  "version": "0.9.1",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },
+  "authors": [
+    {
+      "name": "Yolgonis"
+    }
+  ],
+  "scripts": [
+    "scripts/enhanced-recovery.js"
+  ],
+  "styles": [
+    "styles/enhanced-recovery.css"
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system"
+      }
+    ]
+  }
+}
