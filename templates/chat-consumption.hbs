@@ -1,0 +1,13 @@
+<article class="sabkc-chat-card sabkc-consumption-card">
+  <header>
+    <i class="fa-solid fa-arrow-down-1-9" inert></i>
+    <h3>{{localize "SABKC.Chat.ConsumptionTitle"}}</h3>
+  </header>
+  <p><strong>{{actorName}}</strong></p>
+  <ul>
+    <li>{{localize "SABKC.Chat.DisadvantageApplied"}}</li>
+    {{#if usedD4}}<li>{{localize "SABKC.Chat.D4Applied" result=d4Result}}</li>{{/if}}
+    <li>{{localize "SABKC.Chat.RemainingDisadvantage" count=remainingDisadvantage}}</li>
+    <li>{{localize "SABKC.Chat.RemainingD4" count=remainingD4}}</li>
+  </ul>
+</article>

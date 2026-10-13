@@ -1,0 +1,126 @@
+<section class="sabkc-dashboard-body">
+  <nav class="sabkc-tabs" aria-label="{{localize 'SABKC.Dashboard.Title'}}">
+    <button type="button" data-action="showManagement" class="{{#if isManagement}}active{{/if}}">
+      <i class="fa-solid fa-users-gear" inert></i> {{localize "SABKC.Dashboard.ManagementTab"}}
+    </button>
+    <button type="button" data-action="showRules" class="{{#if isRules}}active{{/if}}">
+      <i class="fa-solid fa-book-open" inert></i> {{localize "SABKC.Dashboard.RulesTab"}}
+    </button>
+  </nav>
+
+  {{#if isManagement}}
+  <div class="sabkc-dashboard-toolbar">
+    <button type="button" data-action="newSession">
+      <i class="fa-solid fa-calendar-plus" inert></i> {{localize "SABKC.Dashboard.NewSession"}}
+    </button>
+  </div>
+
+  {{#if empty}}
+  <div class="sabkc-zero-state">
+    <i class="fa-regular fa-face-meh" inert></i>
+    <p>{{localize "SABKC.Dashboard.NoActors"}}</p>
+  </div>
+  {{else}}
+  <div class="sabkc-actor-list">
+    {{#each actors}}
+    <article class="sabkc-actor-row {{#if hasPenalty}}has-penalty{{/if}}" data-actor-id="{{id}}">
+      <div class="sabkc-actor-identity">
+        <img src="{{img}}" alt="" loading="lazy">
+        <div>
+          <h3>{{name}}</h3>
+          <small>{{owner}}</small>
+        </div>
+      </div>
+      <div class="sabkc-stat">
+        <span>{{localize "SABKC.Common.DisadvantageCharges"}}</span>
+        <strong class="sabkc-badge warning">{{state.disadvantageCharges}}</strong>
+      </div>
+      <div class="sabkc-stat">
+        <span>{{localize "SABKC.Common.D4Charges"}}</span>
+        <strong class="sabkc-badge d4">{{state.d4Charges}}</strong>
+      </div>
+      <div class="sabkc-stat">
+        <span>{{localize "SABKC.Common.SessionViolations"}}</span>
+        <strong class="sabkc-badge">{{state.violationsThisSession}}</strong>
+      </div>
+      <div class="sabkc-status-stack">
+        <span class="sabkc-pending" title="{{pendingLabel}}">
+          <i class="fa-solid fa-scroll" inert></i> {{pendingLabel}}
+        </span>
+      </div>
+      <div class="sabkc-row-actions">
+        <button type="button" data-action="addViolation" data-actor-id="{{id}}">
+          <i class="fa-solid fa-plus" inert></i> {{localize "SABKC.Dashboard.AddViolation"}}
+        </button>
+        <button type="button" data-action="editState" data-actor-id="{{id}}">
+          <i class="fa-solid fa-sliders" inert></i> {{localize "SABKC.Dashboard.EditCharges"}}
+        </button>
+        <button type="button" data-action="openHistory" data-actor-id="{{id}}">
+          <i class="fa-solid fa-clock-rotate-left" inert></i> {{localize "SABKC.Dashboard.History"}}
+        </button>
+        <button type="button" class="danger" data-action="resetActor" data-actor-id="{{id}}">
+          <i class="fa-solid fa-rotate-left" inert></i> {{localize "SABKC.Dashboard.Reset"}}
+        </button>
+      </div>
+    </article>
+    {{/each}}
+  </div>
+  {{/if}}
+  {{/if}}
+
+  {{#if isRules}}
+  <div class="sabkc-rules">
+    <section>
+      <h2>{{localize "SABKC.Rules.TableRule.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.TableRule.Body"}}</p>
+    </section>
+    <section>
+      <h2>{{localize "SABKC.Rules.Interpretation.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.Interpretation.Body"}}</p>
+    </section>
+    <section>
+      <h2>{{localize "SABKC.Rules.Penalty.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.Penalty.Body"}}</p>
+    </section>
+    <section>
+      <h2>{{localize "SABKC.Rules.Application.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.Application.Body"}}</p>
+    </section>
+    <section>
+      <h2>{{localize "SABKC.Rules.Repeat.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.Repeat.Body"}}</p>
+    </section>
+    <section class="sabkc-safety-note">
+      <h2>{{localize "SABKC.Rules.GmNote.Title"}}</h2>
+      <p>{{localize "SABKC.Rules.GmNote.Body"}}</p>
+    </section>
+    <section>
+      <h2>{{localize "SABKC.Rules.D100Table.Title"}}</h2>
+      <div class="sabkc-table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>{{localize "SABKC.Rules.D100Table.Range"}}</th>
+              <th>{{localize "SABKC.Rules.D100Table.RoleResult"}}</th>
+              <th>{{localize "SABKC.Rules.D100Table.Extra"}}</th>
+              <th>{{localize "SABKC.Common.D4Charges"}}</th>
+              <th>{{localize "SABKC.Rules.D100Table.Total"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each d100Rows}}
+            <tr>
+              <td>{{min}}–{{max}}</td>
+              <td>{{roleResult}}</td>
+              <td>+{{extraDisadvantage}}</td>
+              <td>{{d4Charges}}</td>
+              <td>{{expectedTotal}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  {{/if}}
+</section>

@@ -1,0 +1,31 @@
+<article class="sabkc-chat-card sabkc-d100-card">
+  <header>
+    <i class="fa-solid fa-dice-d20" inert></i>
+    <h3>{{localize "SABKC.Chat.D100Title"}}</h3>
+  </header>
+  {{#if automatic100}}
+  <p class="sabkc-chat-lead">{{localize "SABKC.Chat.Automatic100"}}</p>
+  {{else}}
+  <p><strong>{{localize "SABKC.Chat.RollCount"}}:</strong> {{rollCount}}d100</p>
+  <p class="sabkc-chat-lead"><strong>{{localize "SABKC.Chat.D100"}}:</strong> {{diceText}} → {{finalD100}}</p>
+  {{/if}}
+  <section>
+    <h4>{{localize "SABKC.Chat.RoleResult"}}</h4>
+    <p>{{roleResult}}</p>
+  </section>
+  <section class="sabkc-chat-mechanics">
+    <h4>{{localize "SABKC.Chat.Mechanical"}}</h4>
+    <p>+{{extraDisadvantage}} {{localize "SABKC.Common.DisadvantageCharges"}}</p>
+    {{#if d4Charges}}<p>{{localize "SABKC.Chat.NextD4" count=d4Charges}}</p>{{/if}}
+    <p><strong>{{localize "SABKC.Chat.IncidentTotal"}}:</strong> {{incidentTotal}}</p>
+    <p><strong>{{localize "SABKC.Chat.CurrentTotal"}}:</strong> {{currentTotal}}</p>
+  </section>
+  <div class="sabkc-gm-actions">
+    <button type="button" data-sabkc-action="markResolved" data-actor-id="{{actorId}}" data-incident-id="{{incidentId}}">
+      <i class="fa-solid fa-circle-check" inert></i> {{localize "SABKC.History.MarkResolved"}}
+    </button>
+    <button type="button" data-sabkc-action="editIncident" data-actor-id="{{actorId}}" data-incident-id="{{incidentId}}">
+      <i class="fa-solid fa-pen" inert></i> {{localize "SABKC.Common.Edit"}}
+    </button>
+  </div>
+</article>

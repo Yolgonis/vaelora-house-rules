@@ -1,0 +1,55 @@
+<section class="sabkc-history-body">
+  <header>
+    <h2>{{actorName}}</h2>
+    <p>{{localize "SABKC.History.NewestFirst"}}</p>
+  </header>
+  {{#if empty}}
+  <div class="sabkc-zero-state"><p>{{localize "SABKC.History.Empty"}}</p></div>
+  {{else}}
+  <div class="sabkc-history-list">
+    {{#each incidents}}
+    <article class="sabkc-history-entry {{statusClass}}">
+      <header>
+        <div>
+          <strong>#{{violationNumber}} · {{createdAtLabel}}</strong>
+          <span class="sabkc-badge {{statusClass}}">{{statusLabel}}</span>
+        </div>
+        {{#if canRequestD100}}
+        <div class="sabkc-entry-actions">
+          <button type="button" data-action="requestD100" data-incident-id="{{id}}" title="{{localize 'SABKC.Chat.PlayerRollD100'}}">
+            <i class="fa-solid fa-dice-d20" inert></i>
+          </button>
+        </div>
+        {{/if}}
+        {{#if ../canManage}}
+        <div class="sabkc-entry-actions">
+          {{#if canMarkResolved}}
+          <button type="button" data-action="markResolved" data-incident-id="{{id}}" title="{{localize 'SABKC.History.MarkResolved'}}">
+            <i class="fa-solid fa-circle-check" inert></i>
+          </button>
+          {{/if}}
+          <button type="button" data-action="editIncident" data-incident-id="{{id}}" title="{{localize 'SABKC.Common.Edit'}}">
+            <i class="fa-solid fa-pen" inert></i>
+          </button>
+          <button type="button" class="danger" data-action="deleteIncident" data-incident-id="{{id}}" title="{{localize 'SABKC.Common.Delete'}}">
+            <i class="fa-solid fa-trash" inert></i>
+          </button>
+        </div>
+        {{/if}}
+      </header>
+      {{#if statement}}<p><strong>{{localize "SABKC.Incident.Statement"}}:</strong> {{statement}}</p>{{/if}}
+      {{#if target}}<p><strong>{{localize "SABKC.Incident.Target"}}:</strong> {{target}}</p>{{/if}}
+      {{#if scene}}<p><strong>{{localize "SABKC.Incident.Scene"}}:</strong> {{scene}}</p>{{/if}}
+      {{#if roleInterpretation}}<p><strong>{{localize "SABKC.Incident.RoleInterpretation"}}:</strong> {{roleInterpretation}}</p>{{/if}}
+      {{#if d100Resolved}}
+      <div class="sabkc-history-result">
+        <p><strong>{{localize "SABKC.Chat.D100"}}:</strong> {{diceText}} → {{finalD100}}</p>
+        <p><strong>{{localize "SABKC.Chat.RoleResult"}}:</strong> {{roleResult}}</p>
+        <p><strong>{{localize "SABKC.Chat.Mechanical"}}:</strong> +{{addedDisadvantage}} / −1d4 ×{{addedD4}}</p>
+      </div>
+      {{/if}}
+    </article>
+    {{/each}}
+  </div>
+  {{/if}}
+</section>
