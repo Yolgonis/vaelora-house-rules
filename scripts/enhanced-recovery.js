@@ -53,31 +53,44 @@ for (const hook of [
   });
 }
 
-Hooks.on("updateCombat", async (combat, changed) => {
-  if (!game.user.isGM) return;
-  if (!("turn" in changed || "round" in changed)) return;
+// Yalnızca aktif GM işler ve yalnızca tur ileri gittiğinde; geri alma veya
+// birden fazla GM aynı iyileşmeyi tekrar uygulamaz.
+Hooks.on("combatTurnChange", async (combat, previous, current) => {
+  if (!game.user.isActiveGM) return;
 
-  const actor = combat.combatant?.actor;
-  if (!actor) return;
+  const forward = current.round > previous.round
+    || (current.round === previous.round && current.turn > previous.turn);
+  if (!forward) return;
 
-  await processRecovery(actor, "start");
+  const ended = combat.combatants.get(previous.combatantId)?.actor;
+  if (ended) await processRecovery(ended, "end");
+
+  const started = combat.combatants.get(current.combatantId)?.actor;
+  if (started) await processRecovery(started, "start");
 });
 
-Hooks.on("midi-qol.DamageRollComplete", async workflow => {
-  if (!game.user.isGM) return;
+// dnd5e hasarı uygulamadan önce dirençleri hesaplar; sonra uygular. Önizleme
+// yalnızca hesaplar, bu yüzden türler yalnızca gerçek uygulamada baskılar.
+// Midi-QOL da hasarı Actor#applyDamage ile uyguladığı için aynı yoldan geçer.
+const PENDING_DAMAGE_TYPES = new WeakMap();
 
-  const damageTypes = extractDamageTypes(workflow);
-  if (!damageTypes.length) return;
+Hooks.on("dnd5e.calculateDamage", (actor, damages, options) => {
+  const types = damages
+    .filter(d => d.value > 0 && d.type in CONFIG.DND5E.damageTypes)
+    .map(d => normalize(d.type));
+  if (types.length) PENDING_DAMAGE_TYPES.set(options, types);
+});
 
-  const targets = extractTargets(workflow);
+Hooks.on("dnd5e.applyDamage", async (actor, amount, options) => {
+  const types = PENDING_DAMAGE_TYPES.get(options);
+  PENDING_DAMAGE_TYPES.delete(options);
+  if (!types?.length || amount <= 0 || !actor.isOwner) return;
 
-  for (const actor of targets) {
-    const config = getConfig(actor);
-    if (!config.enabled) continue;
+  const config = getConfig(actor);
+  if (!config.enabled) return;
 
-    const matched = damageTypes.filter(type => getBlockedTypes(config).includes(type));
-    if (matched.length) await suppressRecovery(actor, matched);
-  }
+  const matched = types.filter(type => getBlockedTypes(config).includes(type));
+  if (matched.length) await suppressRecovery(actor, matched);
 });
 
 async function injectRecoveryTab(sheet, html) {
@@ -439,58 +452,28 @@ async function processRecovery(actor, trigger = "start") {
   await clearSuppression(actor);
 }
 
-function extractDamageTypes(workflow) {
-  const types = new Set();
-
-  const candidates = [
-    workflow?.damageDetail,
-    workflow?.damageItem?.damageDetail,
-    workflow?.damageRolls,
-    workflow?.damageList,
-    workflow?.item?.system?.damage?.parts
-  ];
-
-  for (const candidate of candidates) {
-    if (!Array.isArray(candidate)) continue;
-
-    for (const part of candidate) {
-      if (typeof part === "string") {
-        types.add(normalize(part));
-      } else if (Array.isArray(part)) {
-        for (const sub of part) {
-          if (typeof sub === "string" && /[a-z]/i.test(sub)) types.add(normalize(sub));
-        }
-      } else if (part?.type) {
-        types.add(normalize(part.type));
-      } else if (part?.damageType) {
-        types.add(normalize(part.damageType));
-      }
-    }
-  }
-
-  return Array.from(types).filter(Boolean);
-}
-
-function extractTargets(workflow) {
-  const targets = new Set();
-
-  for (const target of workflow?.hitTargets ?? []) {
-    if (target?.actor) targets.add(target.actor);
-  }
-
-  for (const target of workflow?.targets ?? []) {
-    if (target?.actor) targets.add(target.actor);
-  }
-
-  return Array.from(targets);
-}
-
 function hasVisibleFeature(actor) {
   return actor.items.some(item => normalize(item.name) === normalize(FEATURE_NAME));
 }
 
-async function ensureVisibleFeature(actor) {
-  if (hasVisibleFeature(actor)) return;
+function buildFeatureDescription(config) {
+  const timing = config.trigger === "end" ? "end" : "start";
+  const types = getBlockedTypes(config);
+  const suppression = types.length
+    ? ` This trait doesn't function on the creature's next turn if it takes ${types.join(", ")} damage.`
+    : "";
+  return `<p>This creature regains hit points at the ${timing} of its turn.${suppression}</p>`;
+}
+
+async function ensureVisibleFeature(actor, config) {
+  const description = buildFeatureDescription(config);
+  const existing = actor.items.find(item => normalize(item.name) === normalize(FEATURE_NAME));
+  if (existing) {
+    if (existing.system.description?.value !== description) {
+      await existing.update({ "system.description.value": description });
+    }
+    return;
+  }
 
   await actor.createEmbeddedDocuments("Item", [{
     name: FEATURE_NAME,
@@ -498,7 +481,7 @@ async function ensureVisibleFeature(actor) {
     img: "icons/magic/life/heart-cross-strong-flame-green.webp",
     system: {
       description: {
-        value: "<p>This creature regains hit points at the start of its turn. This trait does not function on a turn after the creature takes radiant damage.</p>"
+        value: description
       },
       activation: { type: "", cost: null, condition: "" },
       uses: { spent: 0, max: "", recovery: [] },
@@ -711,7 +694,7 @@ async function saveConfigFromTab(actor, tab) {
 
   await setConfig(actor, config);
 
-  if (config.enabled && config.createVisibleFeature) await ensureVisibleFeature(actor);
+  if (config.enabled && config.createVisibleFeature) await ensureVisibleFeature(actor, config);
   if (!config.enabled) await clearSuppression(actor);
 
   ui.notifications.info(`${actor.name} için Enhanced Recovery kaydedildi.`);

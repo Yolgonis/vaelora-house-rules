@@ -1,15 +1,14 @@
-# Enhanced Recovery v0.9.1
+# Enhanced Recovery v0.9.2
 
-Bu sürüm Recovery sekmesinin Inventory/Features içeriğinin altında görünmesini düzeltir.
+D&D 5e için GM kontrollü otomatik iyileşme (regeneration) sistemi. Karakter ve NPC sayfalarına yalnızca GM'in gördüğü bir Recovery sekmesi ekler.
 
-## Düzeltilenler
+## 0.9.2
 
-- Recovery artık Inventory içeriğinin altına gömülmez.
-- Recovery gerçek sheet tab içeriğinin kardeşi olarak eklenir.
-- Recovery sekmesi aktifken diğer tab içerikleri gizlenir.
-- Başka sekmeye geçince boş sayfa kalma riski azaltıldı.
-- Actor update/render sonrası Recovery sekmesi açık kalabilir.
+- **End of Turn tetikleyicisi artık çalışıyor.** Önceden yalnızca tur başı işleniyordu.
+- İyileşme yalnızca aktif GM'de ve tur ileri gittiğinde uygulanır. Birden fazla GM bağlıyken veya tur geri alınınca iki kez iyileşme olmaz.
+- Baskılayan hasar (ör. radiant) artık dnd5e'nin kendi hasar akışından okunur. Midi-QOL gerekmez; Midi ile de çalışır. Yalnızca gerçekten uygulanan hasar sayılır: ıskalanan saldırılar, bağışıklık veya önizleme baskılamaz.
+- Görünür feature açıklaması ayarlanan tetikleyiciyi ve hasar türlerini yansıtır; kaydedince güncellenir.
 
-## Not
+## 0.9.1
 
-Eski sürüm klasörünü silip bu sürümü kurman önerilir.
+- Recovery sekmesi Inventory/Features içeriğinin altına gömülmüyor; gerçek sekme olarak ekleniyor.
