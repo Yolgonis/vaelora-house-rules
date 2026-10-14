@@ -1,0 +1,196 @@
+{
+  "SABKC": {
+    "Title": "Consequences",
+    "Common": {
+      "Save": "Save",
+      "Edit": "Edit",
+      "Delete": "Delete",
+      "None": "None",
+      "NoOwner": "No player owner",
+      "DisadvantageCharges": "Disadvantage Charges",
+      "D4Charges": "−1d4 Charges",
+      "SessionViolations": "Session Violations"
+    },
+    "Settings": {
+      "ConsumptionChat": {
+        "Name": "Penalty Consumption Chat",
+        "Hint": "Visibility of the chat card created when a charge is consumed."
+      },
+      "ViolationChat": {
+        "Name": "Violation Result Chat",
+        "Hint": "Visibility of violation and d100 result cards."
+      },
+      "Chat": {
+        "Public": "Public",
+        "GmOnly": "GM only",
+        "Disabled": "Disabled"
+      },
+      "HistoryLimit": {
+        "Name": "History Limit per Actor",
+        "Hint": "Maximum incident and audit records retained. Mechanical counters are unaffected."
+      },
+      "Debug": {
+        "Name": "Debug Mode",
+        "Hint": "Logs roll transactions and lifecycle details to the browser console."
+      },
+      "Dashboard": {
+        "Name": "Interruption Penalty Management",
+        "Label": "Open Dashboard",
+        "Hint": "Centrally manage violations and charges for player characters."
+      }
+    },
+    "Dashboard": {
+      "Title": "Interruption Penalty Management",
+      "ManagementTab": "Management",
+      "RulesTab": "Rules",
+      "NewSession": "Start New Session",
+      "NewSessionConfirm": "Start a new session? Violation counters will reset, but unused penalty charges will be preserved.",
+      "NoActors": "No D&D5e character with a player owner was found.",
+      "PendingIncident": "Pending incident",
+      "AddViolation": "+ Violation",
+      "EditCharges": "Edit Charges",
+      "History": "Incident History",
+      "Reset": "Reset",
+      "ResetTitle": "Reset Character Penalties",
+      "ResetConfirm": "Reset charges and the session counter for {actor}? Incident history will be preserved."
+    },
+    "Incident": {
+      "CreateTitle": "Add Violation",
+      "EditTitle": "Edit Incident",
+      "AddViolation": "Apply Violation",
+      "Character": "Character",
+      "Owner": "Player / Owner",
+      "Statement": "Spoken words",
+      "Target": "Addressee",
+      "Scene": "Scene / short note",
+      "RoleInterpretation": "In-character interpretation",
+      "RoleInterpretationHint": "This is GM guidance only; no semantic analysis is performed.",
+      "InterpretationDefault": "A modern or out-of-world expression is interpreted through its closest serious intent: mockery, contempt, disrespect, threat, doubt, confession, taking sides, or carelessness.",
+      "Timestamp": "Timestamp"
+    },
+    "EditState": {
+      "Title": "Edit Charges",
+      "Actor": "You are editing persistent penalty counters for {actor}."
+    },
+    "History": {
+      "Title": "Incident History",
+      "NewestFirst": "Newest incidents are shown first. Deleting history does not alter current mechanical charges.",
+      "Empty": "No incidents are recorded for this character.",
+      "Resolved": "Resolved",
+      "ActiveResult": "Active result",
+      "Pending": "Awaiting d100",
+      "MarkResolved": "Mark Resolved",
+      "DeleteTitle": "Delete Incident",
+      "DeleteConfirm": "Delete this history entry? Charges already added or consumed will not change."
+    },
+    "Chat": {
+      "ViolationLead": "{actor} received a violation.",
+      "BasePenalty": "Base penalty",
+      "CurrentTotal": "Character's current total charges",
+      "RequestRetraction": "Retraction Request / d100",
+      "PlayerRollD100": "Roll Retraction d100",
+      "NoRetraction": "No Retraction / Close Incident",
+      "D100Title": "Retraction d100 Result",
+      "D100": "D100",
+      "RollCount": "Dice rolled",
+      "Automatic100": "Automatic 100 due to repeated violations",
+      "RoleResult": "Roleplay Result",
+      "Mechanical": "Mechanical",
+      "NextD4": "Also −1d4 on the next {count} charges",
+      "IncidentTotal": "Total from this incident",
+      "ConsumptionTitle": "Interruption Penalty applied",
+      "DisadvantageApplied": "Disadvantage: two d20s, use the lower",
+      "D4Applied": "−1d4: {result}",
+      "RemainingDisadvantage": "Remaining Disadvantage: {count}",
+      "RemainingD4": "Remaining −1d4: {count}"
+    },
+    "Audit": {
+      "ViolationCreated": "Violation created",
+      "D100Resolved": "Retraction d100 result applied",
+      "IncidentClosed": "Incident closed as resolved",
+      "IncidentEdited": "Incident edited by the GM",
+      "IncidentDeleted": "Incident removed from history",
+      "ManualEdit": "Manually edited by GM",
+      "ActorReset": "Character penalty counters reset",
+      "NewSession": "Violation counter reset for a new session",
+      "PenaltyConsumed": "Interruption Penalty charge consumed"
+    },
+    "Errors": {
+      "GmOnly": "Only a GM may perform this action.",
+      "InvalidActor": "A valid player character could not be found.",
+      "ActorPermission": "You do not have the required permission for this Actor.",
+      "NoActiveGm": "No active GM is available to authorize the penalty transaction.",
+      "SocketTimeout": "The active GM did not respond; the penalty transaction timed out.",
+      "TransactionMissing": "The penalty transaction was not found or expired.",
+      "Transaction": "The penalty transaction could not be prepared.",
+      "CommitFailed": "The roll completed, but the charge could not be updated. The GM should check the Actor's charges.",
+      "IncidentMissing": "The incident could not be found; the Actor or history may have changed.",
+      "IncidentResolved": "This incident is already closed; its d100 cannot be resolved.",
+      "D100AlreadyResolved": "The d100 has already been resolved for this incident.",
+      "PlayerRollOnly": "Only a player who owns this character may roll its retraction d100.",
+      "InvalidD100Roll": "The d100 result is invalid or does not match the expected dice count.",
+      "NonNegativeInteger": "All counters must be non-negative integers.",
+      "Template": "A module template could not be loaded.",
+      "ChatCard": "State was saved, but the chat card could not be created.",
+      "Unexpected": "An unexpected Consequences error occurred.",
+      "WrongSystem": "Consequences only supports D&D5e 5.x roll automation. Mechanical automation has been disabled.",
+      "WrongDndVersion": "Consequences targets D&D5e 5.x. Roll automation has been disabled for this system version."
+    },
+    "Rules": {
+      "TableRule": {
+        "Title": "Table Rule",
+        "Body": "When a player speaks in reaction to an event without first clearly declaring it out of character, the words are treated as spoken by the character. An unauthorized and unnecessary interruption of a serious roleplay scene may also be recorded."
+      },
+      "Interpretation": {
+        "Title": "Interpretation Principle",
+        "Body": "A modern or out-of-world phrase is not inserted literally into the setting; the GM interprets its closest serious intent. The module performs no AI or semantic analysis."
+      },
+      "Penalty": {
+        "Title": "Interruption Penalty",
+        "Body": "Every violation first adds 3 Disadvantage Charges. A charge forces the next eligible d20 test to disadvantage despite advantage sources and is consumed only after the roll completes. A −1d4 charge, if present, is also applied to the real roll total. Death saves and initiative are eligible; damage, healing, and hit dice are not."
+      },
+      "Application": {
+        "Title": "Application",
+        "Body": "While the character has charges, every eligible attack, ability, skill, tool, saving throw, death saving throw, and initiative roll automatically consumes one. A cancelled roll consumes nothing. The character's owning player rolls the retraction d100."
+      },
+      "D100Table": {
+        "Title": "d100 Additional Penalty Table",
+        "Range": "d100",
+        "RoleResult": "Roleplay result",
+        "Extra": "Extra charges",
+        "Total": "Incident total"
+      },
+      "Repeat": {
+        "Title": "Repeated Violations",
+        "Body": "The first violation rolls 1d100; the second rolls 2d100 and uses the higher; the third rolls 3d100 and uses the highest. The fourth and later violations automatically use 100. Each incident can resolve d100 only once."
+      },
+      "GmNote": {
+        "Title": "GM Note",
+        "Body": "Safety tools, player boundaries, real-life emergencies, technical communication issues, and sincere rules questions are exempt. They may be discussed out of character, and the scene may be paused without cost. Role results are narrative guidance; the module does not turn them into invented mechanical modifiers."
+      }
+    },
+    "D100": {
+      "R01_05": "You may replace the first statement with one serious sentence, then wait for your turn to speak.",
+      "R06_10": "Your correction is accepted; you yield the next opportunity to speak in the scene to another player.",
+      "R11_15": "Your correction is accepted, but the addressee retains doubt that the first statement reflected your true thoughts.",
+      "R16_20": "You may only correct the tone. The words remain spoken.",
+      "R21_25": "You may change only one word in the sentence. The rest remains valid.",
+      "R26_30": "You gain the right to explain, but the addressee's full reaction to the first statement happens first.",
+      "R31_35": "The addressee accepts the correction only after an unconditional in-character apology.",
+      "R36_40": "The correction is accepted, but the addressee's trust in you noticeably decreases.",
+      "R41_45": "The addressee accepts the correction; one witness continues to believe the original statement.",
+      "R46_50": "The first statement takes its nearest serious in-character meaning. Its mockery, doubt, or contempt cannot be withdrawn.",
+      "R51_55": "The first statement stands. You may only explain what you meant; the addressee decides which version to believe.",
+      "R56_60": "The first statement stands, and you lose credibility for the rest of the scene. Unsupported claims are not accepted.",
+      "R61_65": "The addressee withdraws cooperation for that scene. Trust must later be regained through action.",
+      "R66_70": "The statement binds not only you but also the group acting with you. Other characters must openly take a position.",
+      "R71_75": "Another character takes responsibility for the conversation. You cannot speak for the scene unless addressed directly.",
+      "R76_80": "The addressee ends the conversation with you and hears no new explanation from you in that scene.",
+      "R81_85": "An influential or authoritative witness hears the first statement, believes it, and acts on it later.",
+      "R86_90": "The statement is understood in its most harmful reasonable sense. The addressee's attitude toward you worsens severely.",
+      "R91_95": "The statement cannot be withdrawn. You may not explain and can speak for the rest of the scene only when directly questioned.",
+      "R96_99": "The statement cannot be withdrawn. The addressee adopts the harshest reasonable interpretation and ends the meeting from your perspective.",
+      "R100": "The statement remains definitively valid; you have no right to explain or correct it. The GM applies the harshest reasonable in-character consequence, and you cannot speak for the rest of the scene."
+    }
+  }
+}

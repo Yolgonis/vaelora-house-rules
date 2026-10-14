@@ -1,0 +1,28 @@
+<article class="sabkc-chat-card sabkc-violation-card">
+  <header>
+    <i class="fa-solid fa-comment-slash" inert></i>
+    <h3>{{localize "SABKC.Title"}}</h3>
+  </header>
+  <p class="sabkc-chat-lead">{{localize "SABKC.Chat.ViolationLead" actor=actorName}}</p>
+  {{#if statement}}<p><strong>{{localize "SABKC.Incident.Statement"}}:</strong> “{{statement}}”</p>{{/if}}
+  {{#if target}}<p><strong>{{localize "SABKC.Incident.Target"}}:</strong> {{target}}</p>{{/if}}
+  {{#if scene}}<p><strong>{{localize "SABKC.Incident.Scene"}}:</strong> {{scene}}</p>{{/if}}
+  <div class="sabkc-chat-mechanics">
+    <p><strong>{{localize "SABKC.Chat.BasePenalty"}}:</strong> +{{basePenalty}} {{localize "SABKC.Common.DisadvantageCharges"}}</p>
+    <p><strong>{{localize "SABKC.Chat.CurrentTotal"}}:</strong> {{currentTotal}}</p>
+    <p><strong>{{localize "SABKC.Common.SessionViolations"}}:</strong> {{violationNumber}}</p>
+  </div>
+  <div class="sabkc-player-actions">
+    <button type="button" data-sabkc-action="requestD100" data-actor-id="{{actorId}}" data-incident-id="{{incidentId}}">
+      <i class="fa-solid fa-dice-d20" inert></i> {{localize "SABKC.Chat.PlayerRollD100"}}
+    </button>
+  </div>
+  <div class="sabkc-gm-actions">
+    <button type="button" data-sabkc-action="closeIncident" data-actor-id="{{actorId}}" data-incident-id="{{incidentId}}">
+      <i class="fa-solid fa-circle-check" inert></i> {{localize "SABKC.Chat.NoRetraction"}}
+    </button>
+    <button type="button" data-sabkc-action="editIncident" data-actor-id="{{actorId}}" data-incident-id="{{incidentId}}">
+      <i class="fa-solid fa-pen" inert></i> {{localize "SABKC.Common.Edit"}}
+    </button>
+  </div>
+</article>

@@ -1,0 +1,35 @@
+<div class="sabkc-dialog-form">
+  <div class="sabkc-form-grid two-columns">
+    <label>
+      <span>{{localize "SABKC.Incident.Character"}}</span>
+      <input type="text" value="{{actorName}}" disabled>
+    </label>
+    <label>
+      <span>{{localize "SABKC.Incident.Owner"}}</span>
+      <input type="text" value="{{owner}}" disabled>
+    </label>
+  </div>
+  <label>
+    <span>{{localize "SABKC.Incident.Statement"}}</span>
+    <textarea name="statement" rows="3">{{statement}}</textarea>
+  </label>
+  <div class="sabkc-form-grid two-columns">
+    <label>
+      <span>{{localize "SABKC.Incident.Target"}}</span>
+      <input type="text" name="target" value="{{target}}">
+    </label>
+    <label>
+      <span>{{localize "SABKC.Incident.Scene"}}</span>
+      <input type="text" name="scene" value="{{scene}}">
+    </label>
+  </div>
+  <label>
+    <span>{{localize "SABKC.Incident.RoleInterpretation"}}</span>
+    <textarea name="roleInterpretation" rows="4">{{roleInterpretation}}</textarea>
+    <small>{{localize "SABKC.Incident.RoleInterpretationHint"}}</small>
+  </label>
+  <label>
+    <span>{{localize "SABKC.Incident.Timestamp"}}</span>
+    <input type="text" value="{{timestamp}}" disabled>
+  </label>
+</div>
