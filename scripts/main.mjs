@@ -5,11 +5,13 @@ import { migrateLegacyData } from "./migration.mjs";
 import * as electrum from "./features/electrum.mjs";
 import * as spellLock from "./features/spell-lock.mjs";
 import * as recovery from "./features/recovery.mjs";
+import * as consequences from "./features/consequences/main.mjs";
 
 const FEATURES = [
   { module: electrum, label: "Electrum" },
   { module: spellLock, label: "SpellLock" },
-  { module: recovery, label: "Recovery" }
+  { module: recovery, label: "Recovery" },
+  { module: consequences, label: "Consequences" }
 ];
 
 const enabledKey = feature => `feature.${feature.module.ID}`;

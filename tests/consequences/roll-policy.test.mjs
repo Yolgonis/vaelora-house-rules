@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { ROLL_TYPES } from "../scripts/constants.mjs";
+import { ROLL_TYPES } from "../../scripts/features/consequences/constants.mjs";
 import {
   buildPenaltyRollConfig,
   classifyDnd5eRoll,
   consumeReservedPenalty,
   forcePenaltyD20Options,
   getReservationDecision
-} from "../scripts/roll-policy.mjs";
+} from "../../scripts/features/consequences/roll-policy.mjs";
 
 const baseState = Object.freeze({
   disadvantageCharges: 3,

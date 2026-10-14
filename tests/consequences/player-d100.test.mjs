@@ -4,8 +4,8 @@ import {
   addViolation,
   getIncidentSocketHandlers,
   requestIncidentD100
-} from "../scripts/incident-manager.mjs";
-import { initializeSocketManager } from "../scripts/socket-manager.mjs";
+} from "../../scripts/features/consequences/incident-manager.mjs";
+import { initializeSocketManager } from "../../scripts/features/consequences/socket-manager.mjs";
 
 test("the owning player rolls d100 while the active GM commits the result", async () => {
   const gm = { id: "gm", name: "GM", active: true, isGM: true };
@@ -27,7 +27,7 @@ test("the owning player rolls d100 while the active GM commits the result", asyn
     getFlag() { return this.flag; },
     testUserPermission(user) { return user?.id === player.id; },
     async update(data) {
-      this.flag = data["flags.soz-agizdan-bir-kere-cikar.state"];
+      this.flag = data["flags.vaelora-house-rules.state"];
       return this;
     }
   };

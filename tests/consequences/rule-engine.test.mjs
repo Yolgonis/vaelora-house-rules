@@ -6,7 +6,7 @@ import {
   getViolationRollCount,
   resolveD100,
   validateD100Table
-} from "../scripts/rule-engine.mjs";
+} from "../../scripts/features/consequences/rule-engine.mjs";
 
 test("d100 boundaries resolve to the required ranges", () => {
   assert.deepEqual([resolveD100(1).min, resolveD100(1).max], [1, 5]);

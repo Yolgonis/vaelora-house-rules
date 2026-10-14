@@ -35,15 +35,15 @@ test("module imports, registers settings, and safely disables itself on another 
   };
   globalThis.ui = { notifications: { warn: (...args) => notifications.push(args), error: () => undefined } };
 
-  await import(`../scripts/main.mjs?smoke=${Date.now()}`);
-  assert.ok(once.has("init"));
-  assert.ok(once.has("ready"));
-  await once.get("init")();
+  const feature = await import(`../../scripts/features/consequences/main.mjs?smoke=${Date.now()}`);
+  assert.equal(typeof feature.register, "function");
+  assert.equal(typeof feature.ready, "function");
+  await feature.register();
   assert.equal(settings.length, 4);
   assert.equal(menus.length, 1);
   assert.equal(typeof moduleRecord.api.openDashboard, "function");
   assert.equal("armNextRoll" in moduleRecord.api, false);
-  await once.get("ready")();
+  await feature.ready();
   assert.equal(notifications.length, 1);
   assert.equal(notifications[0][0], "SABKC.Errors.WrongSystem");
 });

@@ -63,15 +63,20 @@ async function onChatAction(action, { actorId, incidentId }) {
   rerenderDashboard();
 }
 
-Hooks.once("init", () => {
+// Söz Ağızdan Bir Kere Çıkar as a Vaelora Ev Kuralları feature: register() runs during init,
+// ready() on ready after the house rules have migrated legacy data.
+export const ID = "consequences";
+
+export function register() {
   registerSettings(PenaltyDashboard);
   registerSceneControl();
   const module = game.modules.get(MODULE_ID);
   if ( module ) module.api = createPublicApi();
+  Hooks.once("shutdown", restoreRollMethods);
   logger.debug("module initialized");
-});
+}
 
-Hooks.once("ready", async () => {
+export async function ready() {
   if ( game.system.id !== "dnd5e" ) {
     ui.notifications.warn("SABKC.Errors.WrongSystem", { localize: true, permanent: true });
     logger.warn(`unsupported game system: ${game.system.id}`);
@@ -108,6 +113,4 @@ Hooks.once("ready", async () => {
     }
   }
   logger.info(`ready for Foundry ${game.release.version}, dnd5e ${game.system.version}`);
-});
-
-Hooks.once("shutdown", restoreRollMethods);
+}

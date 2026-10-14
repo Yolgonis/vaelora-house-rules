@@ -41,12 +41,12 @@ test("libWrapper is preferred and public roll methods are not directly replaced"
   };
 
   const { initializeRollManager, restoreRollMethods } = await import(
-    `../scripts/roll-manager.mjs?libwrapper=${Date.now()}`
+    `../../scripts/features/consequences/roll-manager.mjs?libwrapper=${Date.now()}`
   );
   initializeRollManager();
 
   assert.equal(registrations.length, 7);
-  assert.ok(registrations.every(entry => entry.moduleId === "soz-agizdan-bir-kere-cikar"));
+  assert.ok(registrations.every(entry => entry.moduleId === "vaelora-house-rules"));
   assert.ok(registrations.every(entry => entry.type === "WRAPPER"));
   assert.equal(MockActor.prototype.rollSkill, originals.rollSkill);
   assert.equal(MockActor.prototype.rollToolCheck, originals.rollToolCheck);

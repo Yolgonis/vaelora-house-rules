@@ -6,8 +6,36 @@ import { MODULE_ID, isPrimaryGM } from "./constants.mjs";
 /** Legacy module id -> flag keys that moved here unchanged. */
 const LEGACY_FLAGS = {
   "muhurlu-bogaz-kelepcesi": ["spellLock"],
-  "enhanced-recovery": ["config", "lastRecovery", "suppressedDamageTypes"]
+  "enhanced-recovery": ["config", "lastRecovery", "suppressedDamageTypes"],
+  "soz-agizdan-bir-kere-cikar": ["state"]
 };
+
+/** Legacy module id -> world setting keys that moved here unchanged. */
+const LEGACY_SETTINGS = {
+  "soz-agizdan-bir-kere-cikar": ["penaltyConsumptionChat", "violationResultChat", "historyLimit", "debugMode"]
+};
+
+/** Copies world settings saved by the old modules unless this module already has its own value. */
+async function migrateLegacySettings() {
+  const storage = game.settings.storage.get("world");
+  let migrated = 0;
+  for (const [legacyId, keys] of Object.entries(LEGACY_SETTINGS)) {
+    for (const key of keys) {
+      const legacy = storage.getSetting(`${legacyId}.${key}`);
+      if (!legacy || storage.getSetting(`${MODULE_ID}.${key}`)) continue;
+      if (!game.settings.settings.has(`${MODULE_ID}.${key}`)) continue;
+      let value = legacy.value;
+      try {
+        value = JSON.parse(value);
+      } catch (error) {
+        // Stored as a plain string.
+      }
+      await game.settings.set(MODULE_ID, key, value);
+      migrated += 1;
+    }
+  }
+  return migrated;
+}
 
 function legacyUpdate(doc) {
   const flags = doc._source?.flags ?? {};
@@ -26,6 +54,12 @@ function legacyUpdate(doc) {
 
 export async function migrateLegacyData() {
   if (!isPrimaryGM()) return 0;
+  try {
+    const settings = await migrateLegacySettings();
+    if (settings) console.log(`Vaelora House Rules | Migrated ${settings} setting(s) from the old modules.`);
+  } catch (error) {
+    console.error("Vaelora House Rules | Could not migrate old module settings.", error);
+  }
   const documents = [...game.items, ...game.actors, ...game.actors.contents.flatMap(actor => actor.items.contents)];
   let migrated = 0;
   for (const doc of documents) {

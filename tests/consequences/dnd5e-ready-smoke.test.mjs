@@ -30,7 +30,7 @@ test("supported D&D5e 5.x ready lifecycle registers roll hooks, socket, template
     getFlag() { return this.flag; }
     testUserPermission() { return true; }
     async update(data) {
-      this.flag = data["flags.soz-agizdan-bir-kere-cikar.state"];
+      this.flag = data["flags.vaelora-house-rules.state"];
       return this;
     }
     async rollSkill(config={}) {
@@ -184,12 +184,12 @@ test("supported D&D5e 5.x ready lifecycle registers roll hooks, socket, template
   };
   globalThis.ui = { notifications: { warn: () => undefined, error: () => undefined } };
 
-  await import(`../scripts/main.mjs?dnd-smoke=${Date.now()}`);
-  await once.get("init")();
-  await once.get("ready")();
+  const feature = await import(`../../scripts/features/consequences/main.mjs?dnd-smoke=${Date.now()}`);
+  await feature.register();
+  await feature.ready();
 
   assert.equal(loadedTemplates.length, 7);
-  assert.deepEqual(socketChannels, ["module.soz-agizdan-bir-kere-cikar"]);
+  assert.deepEqual(socketChannels, ["module.vaelora-house-rules"]);
   assert.ok(on.has("dnd5e.preRoll"));
   assert.ok(on.has("dnd5e.postRollConfiguration"));
   assert.ok(on.has("dnd5e.preRollInitiative"));

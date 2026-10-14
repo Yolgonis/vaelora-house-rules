@@ -1,4 +1,8 @@
-export const MODULE_ID = "soz-agizdan-bir-kere-cikar";
+// Söz Ağızdan Bir Kere Çıkar lives inside Vaelora Ev Kuralları; its flags, settings, socket and
+// templates use that module's id.
+import { MODULE_ID } from "../../constants.mjs";
+
+export { MODULE_ID };
 export const MODULE_TITLE = "Consequences";
 export const LOG_PREFIX = "[SABKC]";
 export const STATE_FLAG = "state";
