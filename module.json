@@ -1,0 +1,45 @@
+{
+  "id": "vaelora-house-rules",
+  "title": "Vaelora Ev Kuralları",
+  "description": "Vaelora masasının ev kuralları tek modülde: Electrum'u kaldırma, Mühürlü Boğaz Kelepçesi ve Enhanced Recovery. Her kural ayarlardan ayrı ayrı açılıp kapatılabilir.",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Yolgonis"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.3.3",
+          "verified": "5.3.3"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/recovery.css"
+  ],
+  "languages": [
+    {
+      "lang": "tr",
+      "name": "Türkçe",
+      "path": "lang/tr.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ]
+}

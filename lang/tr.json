@@ -1,18 +1,34 @@
 {
-  "muhurlu-bogaz-kelepcesi": {
-    "Blocked": "{actor}, {collar} takılıyken büyü yapamaz ve büyü gerektiren eylemleri kullanamaz.",
-    "NoAttune": "{actor}, {collar} takılıyken hiçbir eşyaya attune olamaz.",
-    "LockedModify": "{collar} kilitli; yalnızca GM çıkarabilir veya değiştirebilir.",
-    "LockedDelete": "{collar} kilitli; yalnızca GM silebilir.",
-    "Sheet": {
-      "Legend": "Mühürlü Boğaz Kelepçesi",
-      "Label": "Büyüyü mühürler",
-      "Hint": "Takılıyken taşıyıcı büyü yapamaz, attune olamaz; devam eden concentration biter. Oyuncular çıkaramaz."
+  "vaelora-house-rules": {
+    "Feature": {
+      "Electrum": {
+        "Name": "Electrum'u kaldır",
+        "Hint": "Electrum'u D&D 5e para birimleri listesinden kaldırır."
+      },
+      "SpellLock": {
+        "Name": "Mühürlü Boğaz Kelepçesi",
+        "Hint": "Kelepçe olarak işaretlenen eşyalar takılıyken büyüleri ve büyü gerektiren eylemleri engeller, attunement'ları kaldırır ve concentration'ı bitirir. Oyuncular çıkaramaz."
+      },
+      "Recovery": {
+        "Name": "Enhanced Recovery",
+        "Hint": "Yaratığın turunun başında ya da sonunda GM kontrollü iyileşme; seçilen hasar türleri bir sonraki iyileşmeyi engeller. Karakter ve NPC sayfalarındaki, yalnızca GM'in gördüğü Recovery sekmesinden ayarlanır."
+      }
     },
-    "Settings": {
-      "BlockMagicItems": {
-        "Name": "Sihirli eşyaları da engelle",
-        "Hint": "Açıksa kelepçe takılıyken sihirli (Magical özellikli) eşyaların bütün aktiviteleri de engellenir. Kapalıysa yalnızca büyüler ve büyü gerektiren aktiviteler engellenir."
+    "SpellLock": {
+      "Blocked": "{actor}, {collar} takılıyken büyü yapamaz ve büyü gerektiren eylemleri kullanamaz.",
+      "NoAttune": "{actor}, {collar} takılıyken hiçbir eşyaya attune olamaz.",
+      "LockedModify": "{collar} kilitli; yalnızca GM çıkarabilir veya değiştirebilir.",
+      "LockedDelete": "{collar} kilitli; yalnızca GM silebilir.",
+      "Sheet": {
+        "Legend": "Mühürlü Boğaz Kelepçesi",
+        "Label": "Büyüyü mühürler",
+        "Hint": "Takılıyken taşıyıcı büyü yapamaz, attune olamaz; devam eden concentration biter. Oyuncular çıkaramaz."
+      },
+      "Settings": {
+        "BlockMagicItems": {
+          "Name": "Kelepçe: sihirli eşyaları da engelle",
+          "Hint": "Açıksa kelepçe takılıyken sihirli (Magical özellikli) eşyaların bütün aktiviteleri de engellenir. Kapalıysa yalnızca büyüler ve büyü gerektiren aktiviteler engellenir."
+        }
       }
     }
   }

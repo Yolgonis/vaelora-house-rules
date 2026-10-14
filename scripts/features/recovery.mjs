@@ -1,6 +1,8 @@
-(() => {
+// Enhanced Recovery: GM-controlled regeneration (start/end of turn healing, suppressed by chosen
+// damage types). Configured per actor in a GM-only Recovery tab on the character/NPC sheet.
+import { MODULE_ID } from "../constants.mjs";
 
-const MODULE_ID = "enhanced-recovery";
+export const ID = "recovery";
 const TAB_ID = "enhanced-recovery";
 const ACTIVE_TABS = globalThis.EnhancedRecoveryActiveTabs ??= new Map();
 
@@ -36,62 +38,63 @@ const MODES = {
   formula: "Formula"
 };
 
-Hooks.once("ready", () => {
-  console.log(`${MODULE_ID} | Ready.`);
-});
-
-for (const hook of [
-  "renderActorSheet",
-  "renderActorSheet5eCharacter",
-  "renderActorSheet5eNPC",
-  "renderCharacterActorSheet",
-  "renderNPCActorSheet"
-]) {
-  Hooks.on(hook, async (sheet, html) => {
-    if (!game.user.isGM) return;
-    await injectRecoveryTab(sheet, html);
-  });
-}
-
-// Yalnızca aktif GM işler ve yalnızca tur ileri gittiğinde; geri alma veya
-// birden fazla GM aynı iyileşmeyi tekrar uygulamaz.
-Hooks.on("combatTurnChange", async (combat, previous, current) => {
-  if (!game.user.isActiveGM) return;
-
-  const forward = current.round > previous.round
-    || (current.round === previous.round && current.turn > previous.turn);
-  if (!forward) return;
-
-  const ended = combat.combatants.get(previous.combatantId)?.actor;
-  if (ended) await processRecovery(ended, "end");
-
-  const started = combat.combatants.get(current.combatantId)?.actor;
-  if (started) await processRecovery(started, "start");
-});
-
 // dnd5e hasarı uygulamadan önce dirençleri hesaplar; sonra uygular. Önizleme
 // yalnızca hesaplar, bu yüzden türler yalnızca gerçek uygulamada baskılar.
 // Midi-QOL da hasarı Actor#applyDamage ile uyguladığı için aynı yoldan geçer.
 const PENDING_DAMAGE_TYPES = new WeakMap();
 
-Hooks.on("dnd5e.calculateDamage", (actor, damages, options) => {
-  const types = damages
-    .filter(d => d.value > 0 && d.type in CONFIG.DND5E.damageTypes)
-    .map(d => normalize(d.type));
-  if (types.length) PENDING_DAMAGE_TYPES.set(options, types);
-});
+export function register() {
+  for (const hook of [
+    "renderActorSheet",
+    "renderActorSheet5eCharacter",
+    "renderActorSheet5eNPC",
+    "renderCharacterActorSheet",
+    "renderNPCActorSheet"
+  ]) {
+    Hooks.on(hook, async (sheet, html) => {
+      if (!game.user.isGM) return;
+      await injectRecoveryTab(sheet, html);
+    });
+  }
 
-Hooks.on("dnd5e.applyDamage", async (actor, amount, options) => {
-  const types = PENDING_DAMAGE_TYPES.get(options);
-  PENDING_DAMAGE_TYPES.delete(options);
-  if (!types?.length || amount <= 0 || !actor.isOwner) return;
+  // Yalnızca aktif GM işler ve yalnızca tur ileri gittiğinde; geri alma veya
+  // birden fazla GM aynı iyileşmeyi tekrar uygulamaz.
+  Hooks.on("combatTurnChange", async (combat, previous, current) => {
+    if (!game.user.isActiveGM) return;
 
-  const config = getConfig(actor);
-  if (!config.enabled) return;
+    const forward = current.round > previous.round
+      || (current.round === previous.round && current.turn > previous.turn);
+    if (!forward) return;
 
-  const matched = types.filter(type => getBlockedTypes(config).includes(type));
-  if (matched.length) await suppressRecovery(actor, matched);
-});
+    const ended = combat.combatants.get(previous.combatantId)?.actor;
+    if (ended) await processRecovery(ended, "end");
+
+    const started = combat.combatants.get(current.combatantId)?.actor;
+    if (started) await processRecovery(started, "start");
+  });
+
+  Hooks.on("dnd5e.calculateDamage", (actor, damages, options) => {
+    const types = damages
+      .filter(d => d.value > 0 && d.type in CONFIG.DND5E.damageTypes)
+      .map(d => normalize(d.type));
+    if (types.length) PENDING_DAMAGE_TYPES.set(options, types);
+  });
+
+  Hooks.on("dnd5e.applyDamage", async (actor, amount, options) => {
+    const types = PENDING_DAMAGE_TYPES.get(options);
+    PENDING_DAMAGE_TYPES.delete(options);
+    if (!types?.length || amount <= 0 || !actor.isOwner) return;
+
+    const config = getConfig(actor);
+    if (!config.enabled) return;
+
+    const matched = types.filter(type => getBlockedTypes(config).includes(type));
+    if (matched.length) await suppressRecovery(actor, matched);
+  });
+
+  // Makro API'si; eski Enhanced Recovery modülüyle aynı ad.
+  globalThis.EnhancedRecovery = RECOVERY_API;
+}
 
 async function injectRecoveryTab(sheet, html) {
   const actor = sheet.actor;
@@ -700,7 +703,7 @@ async function saveConfigFromTab(actor, tab) {
   ui.notifications.info(`${actor.name} için Enhanced Recovery kaydedildi.`);
 }
 
-window.EnhancedRecovery = {
+const RECOVERY_API = {
   get(actorName) {
     const actor = game.actors.getName(actorName);
     if (!actor) return ui.notifications.error(`Actor bulunamadı: ${actorName}`);
@@ -749,5 +752,3 @@ window.EnhancedRecovery = {
     ui.notifications.info(`${actor.name} için Enhanced Recovery baskısı temizlendi.`);
   }
 };
-
-})();

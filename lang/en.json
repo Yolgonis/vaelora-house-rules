@@ -1,18 +1,34 @@
 {
-  "muhurlu-bogaz-kelepcesi": {
-    "Blocked": "{actor} cannot cast spells or use magic-required activities while wearing {collar}.",
-    "NoAttune": "{actor} cannot attune to an item while wearing {collar}.",
-    "LockedModify": "{collar} is locked; only the Game Master can remove or modify it.",
-    "LockedDelete": "{collar} is locked; only the Game Master can delete it.",
-    "Sheet": {
-      "Legend": "Spell-Suppressing Collar",
-      "Label": "Suppresses magic",
-      "Hint": "While equipped, the wearer can't cast spells or attune, and ongoing concentration ends. Players can't remove it."
+  "vaelora-house-rules": {
+    "Feature": {
+      "Electrum": {
+        "Name": "Remove Electrum",
+        "Hint": "Removes Electrum pieces from the D&D 5e currency list."
+      },
+      "SpellLock": {
+        "Name": "Spell-Suppressing Collar",
+        "Hint": "Items marked as a collar block spells and magic-required activities, remove attunements and end concentration while equipped. Players can't remove them."
+      },
+      "Recovery": {
+        "Name": "Enhanced Recovery",
+        "Hint": "GM-controlled regeneration at the start or end of a creature's turn, suppressed by chosen damage types. Configured in the GM-only Recovery tab of character and NPC sheets."
+      }
     },
-    "Settings": {
-      "BlockMagicItems": {
-        "Name": "Also block magic items",
-        "Hint": "When enabled, every activity of items with the Magical property is also blocked while the collar is worn. When disabled, only spells and magic-required activities are blocked."
+    "SpellLock": {
+      "Blocked": "{actor} cannot cast spells or use magic-required activities while wearing {collar}.",
+      "NoAttune": "{actor} cannot attune to an item while wearing {collar}.",
+      "LockedModify": "{collar} is locked; only the Game Master can remove or modify it.",
+      "LockedDelete": "{collar} is locked; only the Game Master can delete it.",
+      "Sheet": {
+        "Legend": "Spell-Suppressing Collar",
+        "Label": "Suppresses magic",
+        "Hint": "While equipped, the wearer can't cast spells or attune, and ongoing concentration ends. Players can't remove it."
+      },
+      "Settings": {
+        "BlockMagicItems": {
+          "Name": "Collar: also block magic items",
+          "Hint": "When enabled, every activity of items with the Magical property is also blocked while the collar is worn. When disabled, only spells and magic-required activities are blocked."
+        }
       }
     }
   }
