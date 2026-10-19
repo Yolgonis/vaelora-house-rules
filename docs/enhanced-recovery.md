@@ -14,8 +14,8 @@ Foundry VTT 13 ve D&D 5e için GM kontrollü otomatik iyileşme (regeneration) s
 ## Kullanım
 
 1. GM olarak yaratığın sayfasını açın ve **Recovery** sekmesine geçin.
-2. **Bu karaktere Enhanced Recovery ver** kutusunu işaretleyin, modu, miktarı ve baskılayan hasar türlerini seçin.
-3. **Kaydet**'e basın. **Test** düğmesi iyileşmeyi savaş dışında bir kez uygular.
+2. Başlıktaki anahtarı açın; yöntemi, miktarı, tetikleyiciyi ve baskılayan hasar türlerini seçin. Değişiklikler kendiliğinden kaydedilir.
+3. **Şimdi dene** iyileşmeyi savaş dışında bir kez uygular. Az kullanılan ayarlar (en düşük can, çarpan, 0 canda çalışma, görünür özellik, sohbet mesajı) **Gelişmiş** bölümündedir.
 
 Savaşta iyileşme yalnızca aktif GM'in istemcisinde ve tur ileri giderken çalışır; birden fazla GM bağlıyken veya tur geri alındığında iki kez uygulanmaz.
 

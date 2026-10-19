@@ -1,4 +1,4 @@
-
+/* ---------- Sekme davranışı (dnd5e sayfa sekmesi) ---------- */
 .enhanced-recovery-tab {
   position: static !important;
   inset: auto !important;
@@ -20,106 +20,6 @@
   display: block !important;
 }
 
-.enhanced-recovery-content {
-  max-width: 920px;
-  margin: 0 auto;
-  padding-bottom: 2rem;
-  box-sizing: border-box;
-}
-
-.enhanced-recovery-content .er-section {
-  margin-bottom: 0.75rem;
-  padding: 0.75rem;
-  border: 1px solid rgba(150, 130, 80, 0.55);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.22);
-}
-
-.enhanced-recovery-content .er-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid rgba(150, 130, 80, 0.35);
-}
-
-.enhanced-recovery-content .er-section-header h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.enhanced-recovery-content .er-status {
-  padding: 0.15rem 0.45rem;
-  border: 1px solid rgba(150, 130, 80, 0.55);
-  border-radius: 999px;
-  font-size: 0.75rem;
-}
-
-.enhanced-recovery-content .er-status.active {
-  font-weight: 700;
-}
-
-.enhanced-recovery-content .er-summary-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem 1rem;
-}
-
-.enhanced-recovery-content .er-main-toggle {
-  font-weight: 700;
-}
-
-.enhanced-recovery-content .er-form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 0.6rem 0.9rem;
-}
-
-.enhanced-recovery-content .form-group {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.enhanced-recovery-content .form-check {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.enhanced-recovery-content input[type="number"],
-.enhanced-recovery-content input[type="text"],
-.enhanced-recovery-content select {
-  width: 100%;
-  min-height: 28px;
-  box-sizing: border-box;
-}
-
-.enhanced-recovery-content input[type="checkbox"] {
-  width: auto;
-  min-height: auto;
-}
-
-.enhanced-recovery-content .er-check-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  gap: 0.45rem;
-  margin-bottom: 0.7rem;
-}
-
-.enhanced-recovery-content .er-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(160px, 1fr));
-  gap: 0.5rem;
-  margin-top: 0.7rem;
-}
-
-.enhanced-recovery-content .er-actions button {
-  min-height: 34px;
-}
-
 .enhanced-recovery-tab-button {
   display: flex !important;
   align-items: center !important;
@@ -132,24 +32,360 @@
   line-height: 1 !important;
 }
 
-.enhanced-recovery-content input[name="formula"] {
+/* ---------- Panel ---------- */
+.er {
+  --er-accent: #7ccf8b;
+  --er-accent-dim: rgba(124, 207, 139, 0.35);
+  --er-gold: #d6b45f;
+  --er-text: #ece6d6;
+  --er-muted: #a8a08c;
+  --er-surface: rgba(18, 18, 22, 0.9);
+  --er-surface-2: rgba(255, 255, 255, 0.04);
+  --er-border: rgba(214, 180, 95, 0.28);
+
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: var(--er-text);
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.er [hidden] {
+  display: none !important;
+}
+
+.er-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Başlık ve anahtar */
+.er-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.er-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--er-muted);
+}
+
+.er-header h2 {
+  margin: 0.1rem 0 0.2rem;
+  padding: 0;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--er-text);
+}
+
+.er-sentence {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--er-muted);
+}
+
+.er-switch {
+  flex: none;
+  position: relative;
+  cursor: pointer;
+  margin-top: 0.3rem;
+}
+
+.er-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.er-switch-track {
+  display: block;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.2s ease;
+}
+
+.er-switch-thumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin: 2px;
+  border-radius: 50%;
+  background: #cfc8b6;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.er-switch input:checked + .er-switch-track {
+  background: var(--er-accent-dim);
+  border-color: var(--er-accent);
+}
+
+.er-switch input:checked + .er-switch-track .er-switch-thumb {
+  transform: translateX(20px);
+  background: var(--er-accent);
+}
+
+/* Durum çipleri */
+.er-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.er-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  background: var(--er-surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.er-chip-muted {
+  color: var(--er-muted);
+}
+
+.er-chip-warn {
+  color: #f0b27a;
+  border-color: rgba(240, 178, 122, 0.4);
+  background: rgba(240, 178, 122, 0.08);
+}
+
+.er-chip button {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin: 0 0 0 0.1rem;
+  padding: 0 0.2rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Bölümler */
+.er-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.85rem;
+  background: var(--er-surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.er-section h3,
+.er-advanced summary {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--er-gold);
+}
+
+.er-advanced summary {
+  cursor: pointer;
+}
+
+.er-advanced[open] summary {
+  margin-bottom: 0.6rem;
+}
+
+.er-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.6rem 0.8rem;
+}
+
+.er-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--er-muted);
+}
+
+.er-field-wide {
+  grid-column: 1 / -1;
+}
+
+.er-field em {
+  font-style: normal;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+}
+
+.er-field input,
+.er-field select {
+  width: 100%;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+
+.er-field input[name="formula"] {
   font-family: monospace;
 }
 
-@media (max-width: 760px) {
+/* Tetikleyici: iki seçenekli anahtar */
+.er-segment {
+  display: flex;
+  border: 1px solid var(--er-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.er-segment label {
+  flex: 1;
+  cursor: pointer;
+}
+
+.er-segment input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.er-segment span {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  text-align: center;
+  color: var(--er-muted);
+  font-size: 0.8rem;
+}
+
+.er-segment input:checked + span {
+  background: rgba(214, 180, 95, 0.18);
+  color: var(--er-text);
+}
+
+/* Hasar türleri: hap */
+.er-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.er-pill {
+  cursor: pointer;
+}
+
+.er-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.er-pill span {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--er-muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.er-pill input:checked + span {
+  color: #1c1a14;
+  background: var(--er-gold);
+  border-color: var(--er-gold);
+}
+
+/* Gelişmiş */
+.er-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+.er-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+}
+
+.er-check input {
+  width: auto;
+  min-height: auto;
+  margin: 0;
+}
+
+.er-link {
+  align-self: flex-start;
+  width: auto;
+  margin-top: 0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--er-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.er-link:hover {
+  color: var(--er-text);
+}
+
+/* Alt bilgi */
+.er-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.er-hint {
+  font-size: 0.78rem;
+  color: var(--er-muted);
+}
+
+.er-hint i {
+  color: var(--er-accent);
+  margin-right: 0.25rem;
+}
+
+.er-footer button {
+  flex: none;
+  width: auto;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+}
+
+@media (max-width: 560px) {
   .enhanced-recovery-tab {
     padding: 0.5rem !important;
   }
 
-  .enhanced-recovery-content .er-form-grid {
-    grid-template-columns: 1fr;
+  .er {
+    padding: 1rem 0.85rem;
   }
 
-  .enhanced-recovery-content .er-check-grid {
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-  }
-
-  .enhanced-recovery-content .er-actions {
-    grid-template-columns: 1fr;
+  .er-footer {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

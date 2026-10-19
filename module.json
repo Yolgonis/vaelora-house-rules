@@ -2,7 +2,7 @@
   "id": "vaelora-house-rules",
   "title": "Vaelora Ev Kuralları",
   "description": "Vaelora masasının ev kuralları tek modülde: Electrum'u kaldırma, Mühürlü Boğaz Kelepçesi, Enhanced Recovery ve Söz Ağızdan Bir Kere Çıkar. Her kural ayarlardan ayrı ayrı açılıp kapatılabilir.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
   "authors": [

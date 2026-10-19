@@ -503,157 +503,181 @@ async function removeVisibleFeature(actor) {
   await actor.deleteEmbeddedDocuments("Item", items.map(item => item.id));
 }
 
+// Formül dışındaki modlarda bir sonraki iyileşmenin tahmini (çarpan hariç).
+function previewAmount(actor, config) {
+  const hp = actor.system?.attributes?.hp;
+  const cr = Number(actor.system?.details?.cr ?? 0);
+  const level = Number(actor.system?.details?.level ?? 0);
+  const con = Number(actor.system?.abilities?.con?.mod ?? 0);
+  switch (config.mode) {
+    case "fixed": return config.amount;
+    case "cr+con": return (cr || 1) + con;
+    case "level+con": return (level || 1) + con;
+    case "base+con": return (cr || level || 1) + con;
+    case "percent-max": return Math.floor(Number(hp?.max ?? 0) * (config.amount / 100));
+    case "percent-missing": return Math.floor((Number(hp?.max ?? 0) - Number(hp?.value ?? 0)) * (config.amount / 100));
+    default: return null;
+  }
+}
+
+function damageTypeLabel(type) {
+  const label = CONFIG.DND5E?.damageTypes?.[type]?.label;
+  return label ? game.i18n.localize(label) : type;
+}
+
+const MODE_LABELS_TR = {
+  fixed: "Sabit miktar",
+  "cr+con": "CR + CON",
+  "level+con": "Seviye + CON",
+  "base+con": "Taban (CR ya da seviye) + CON",
+  "percent-max": "Azami canın yüzdesi",
+  "percent-missing": "Eksik canın yüzdesi",
+  formula: "Zar formülü"
+};
+
+const RECOVERY_ADVANCED_OPEN = new Set();
+
 async function renderRecoveryTab(sheet, actor, tab) {
   const config = getConfig(actor);
   const suppressed = getSuppressedTypes(actor);
   const lastRecovery = actor.getFlag(MODULE_ID, "lastRecovery") ?? null;
-  const lastRecoveryText = lastRecovery
-    ? `${lastRecovery.amount} HP (${lastRecovery.before} → ${lastRecovery.after})`
-    : "Yok";
   const blockedTypes = config.blockedBy ?? [];
+  const allBlocked = getBlockedTypes(config);
+  const visibleFeature = hasVisibleFeature(actor);
+  const usesAmount = ["fixed", "percent-max", "percent-missing"].includes(config.mode);
+  const isPercent = config.mode.startsWith("percent");
+  const preview = previewAmount(actor, config);
+  const timing = config.trigger === "end" ? "sonunda" : "başında";
 
-  const modeOptions = Object.entries(MODES).map(([value, label]) => `
-    <option value="${value}" ${config.mode === value ? "selected" : ""}>${label}</option>
-  `).join("");
+  const headline = !config.enabled ? "Kapalı"
+    : config.mode === "formula" ? `${escapeHtml(config.formula || "1d6")} HP / tur`
+    : `+${preview ?? 0} HP / tur`;
+  const sentence = `Her turun ${timing} can yeniler.`
+    + (allBlocked.length ? ` ${allBlocked.map(damageTypeLabel).join(", ")} hasarı bir sonraki yenilenmeyi durdurur.` : "");
 
-  const damageChecks = DAMAGE_TYPES.map(type => `
-    <label class="form-check">
+  const modeOptions = Object.keys(MODES).map(value =>
+    `<option value="${value}" ${config.mode === value ? "selected" : ""}>${MODE_LABELS_TR[value] ?? MODES[value]}</option>`
+  ).join("");
+
+  const damagePills = DAMAGE_TYPES.map(type => `
+    <label class="er-pill">
       <input type="checkbox" name="blockedBy" value="${type}" ${blockedTypes.includes(type) ? "checked" : ""}>
-      <span>${type}</span>
-    </label>
-  `).join("");
+      <span>${damageTypeLabel(type)}</span>
+    </label>`).join("");
+
+  const chips = [
+    suppressed.length
+      ? `<span class="er-chip er-chip-warn"><i class="fas fa-ban"></i> Baskılandı: ${suppressed.map(damageTypeLabel).join(", ")}
+          <button type="button" class="enhanced-recovery-clear" data-tooltip="Baskıyı temizle"><i class="fas fa-xmark"></i></button></span>`
+      : "",
+    lastRecovery
+      ? `<span class="er-chip"><i class="fas fa-heart-pulse"></i> Son: +${lastRecovery.amount} HP (${lastRecovery.before} → ${lastRecovery.after})</span>`
+      : `<span class="er-chip er-chip-muted"><i class="fas fa-heart-pulse"></i> Henüz yenilenmedi</span>`,
+    `<span class="er-chip ${visibleFeature ? "" : "er-chip-muted"}"><i class="fas fa-${visibleFeature ? "eye" : "eye-slash"}"></i> ${visibleFeature ? "Görünür özellik var" : "Görünür özellik yok"}</span>`
+  ].join("");
 
   tab.innerHTML = `
-    <div class="enhanced-recovery-content">
-      <section class="er-section">
-        <header class="er-section-header">
-          <h3>Enhanced Recovery</h3>
-          <span class="er-status ${config.enabled ? "active" : ""}">${config.enabled ? "Active" : "Inactive"}</span>
-        </header>
-
-        <div class="er-summary-row">
-          <label class="form-check er-main-toggle">
-            <input type="checkbox" name="enabled" ${config.enabled ? "checked" : ""}>
-            <span>Bu karaktere Enhanced Recovery ver</span>
-          </label>
-
-          <span><strong>Görünür Feature:</strong> ${hasVisibleFeature(actor) ? "Var" : "Yok"}</span>
-          <span><strong>Baskılanma:</strong> ${suppressed.length ? suppressed.join(", ") : "Yok"}</span>
-          <span><strong>Son Recovery:</strong> ${lastRecoveryText}</span>
+    <div class="enhanced-recovery-content er">
+      <header class="er-header">
+        <div class="er-title">
+          <span class="er-eyebrow">Enhanced Recovery</span>
+          <h2>${headline}</h2>
+          <p class="er-sentence">${config.enabled ? sentence : "Açınca bu yaratık savaşta her tur can yeniler."}</p>
         </div>
-      </section>
-
-      <section class="er-section">
-        <header class="er-section-header"><h3>General</h3></header>
-
-        <div class="er-form-grid">
-          <label class="form-group">
-            <span>Heal Mode</span>
-            <select name="mode">${modeOptions}</select>
-          </label>
-
-          <label class="form-group">
-            <span>Amount</span>
-            <input type="number" name="amount" value="${config.amount}" min="0" step="1">
-          </label>
-
-          <label class="form-group">
-            <span>Formula</span>
-            <input type="text" name="formula" value="${escapeHtml(config.formula)}" placeholder="1d6 + @con">
-          </label>
-
-          <label class="form-group">
-            <span>Trigger</span>
-            <select name="trigger">
-              <option value="start" ${config.trigger === "start" ? "selected" : ""}>Start of Turn</option>
-              <option value="end" ${config.trigger === "end" ? "selected" : ""}>End of Turn</option>
-            </select>
-          </label>
-        </div>
-      </section>
-
-      <section class="er-section">
-        <header class="er-section-header"><h3>Conditions</h3></header>
-
-        <div class="er-form-grid">
-          <label class="form-group">
-            <span>Minimum HP</span>
-            <input type="number" name="minHp" value="${config.minHp}" step="1">
-          </label>
-
-          <label class="form-group">
-            <span>Double Below %</span>
-            <input type="number" name="doubleBelow" value="${config.doubleBelow}" placeholder="boş bırak" step="1">
-          </label>
-
-          <label class="form-group">
-            <span>Multiplier</span>
-            <input type="number" name="multiplier" value="${config.multiplier}" min="1" step="0.5">
-          </label>
-
-          <label class="form-check">
-            <input type="checkbox" name="worksAtZero" ${config.worksAtZero ? "checked" : ""}>
-            <span>Works at 0 HP</span>
-          </label>
-        </div>
-      </section>
-
-      <section class="er-section">
-        <header class="er-section-header"><h3>Suppression</h3></header>
-
-        <div class="er-check-grid">
-          ${damageChecks}
-        </div>
-
-        <label class="form-group">
-          <span>Custom Damage Types</span>
-          <input type="text" name="customBlockedBy" value="${escapeHtml(config.customBlockedBy)}" placeholder="ör: poison, slashing">
+        <label class="er-switch" data-tooltip="Enhanced Recovery">
+          <input type="checkbox" name="enabled" ${config.enabled ? "checked" : ""}>
+          <span class="er-switch-track"><span class="er-switch-thumb"></span></span>
         </label>
-      </section>
+      </header>
 
-      <section class="er-section">
-        <header class="er-section-header"><h3>Visibility & Tools</h3></header>
+      <div class="er-body" ${config.enabled ? "" : "hidden"}>
+        <div class="er-chips">${chips}</div>
 
-        <div class="er-form-grid">
-          <label class="form-check">
-            <input type="checkbox" name="createVisibleFeature" ${config.createVisibleFeature ? "checked" : ""}>
-            <span>Create visible Feature</span>
+        <section class="er-section">
+          <h3>İyileşme</h3>
+          <div class="er-grid">
+            <label class="er-field er-field-wide">
+              <span>Yöntem</span>
+              <select name="mode">${modeOptions}</select>
+            </label>
+            <label class="er-field" ${usesAmount ? "" : "hidden"}>
+              <span>${isPercent ? "Yüzde" : "Miktar (HP)"}</span>
+              <input type="number" name="amount" value="${config.amount}" min="0" step="1">
+            </label>
+            <label class="er-field" ${config.mode === "formula" ? "" : "hidden"}>
+              <span>Formül <em>@cr @level @base @con</em></span>
+              <input type="text" name="formula" value="${escapeHtml(config.formula)}" placeholder="1d6 + @con">
+            </label>
+            <div class="er-field">
+              <span>Ne zaman</span>
+              <div class="er-segment">
+                <label><input type="radio" name="trigger" value="start" ${config.trigger === "end" ? "" : "checked"}><span>Tur başında</span></label>
+                <label><input type="radio" name="trigger" value="end" ${config.trigger === "end" ? "checked" : ""}><span>Tur sonunda</span></label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="er-section">
+          <h3>Baskılayan hasar</h3>
+          <div class="er-pills">${damagePills}</div>
+          <label class="er-field">
+            <span>Diğer türler <em>virgülle</em></span>
+            <input type="text" name="customBlockedBy" value="${escapeHtml(config.customBlockedBy)}" placeholder="ör. poison, slashing">
           </label>
+        </section>
 
-          <label class="form-check">
-            <input type="checkbox" name="chatMessage" ${config.chatMessage ? "checked" : ""}>
-            <span>Show Chat Message</span>
-          </label>
-        </div>
+        <details class="er-section er-advanced">
+          <summary>Gelişmiş</summary>
+          <div class="er-grid">
+            <label class="er-field">
+              <span>En düşük can</span>
+              <input type="number" name="minHp" value="${config.minHp}" step="1">
+            </label>
+            <label class="er-field">
+              <span>Şu yüzdenin altında</span>
+              <input type="number" name="doubleBelow" value="${config.doubleBelow}" placeholder="boş" step="1">
+            </label>
+            <label class="er-field">
+              <span>Çarpan</span>
+              <input type="number" name="multiplier" value="${config.multiplier}" min="1" step="0.5">
+            </label>
+          </div>
+          <div class="er-toggles">
+            <label class="er-check"><input type="checkbox" name="worksAtZero" ${config.worksAtZero ? "checked" : ""}><span>0 canda da çalışır</span></label>
+            <label class="er-check"><input type="checkbox" name="createVisibleFeature" ${config.createVisibleFeature ? "checked" : ""}><span>Sayfada görünür özellik oluştur</span></label>
+            <label class="er-check"><input type="checkbox" name="chatMessage" ${config.chatMessage ? "checked" : ""}><span>Sohbete yenilenme mesajı yaz</span></label>
+          </div>
+          ${visibleFeature ? `<button type="button" class="enhanced-recovery-remove-visible er-link"><i class="fas fa-eye-slash"></i> Görünür özelliği kaldır</button>` : ""}
+        </details>
 
-        <div class="er-actions">
-          <button type="button" class="enhanced-recovery-save">
-            <i class="fas fa-save"></i> Kaydet
-          </button>
-
-          <button type="button" class="enhanced-recovery-test">
-            <i class="fas fa-vial"></i> Test
-          </button>
-
-          <button type="button" class="enhanced-recovery-clear">
-            <i class="fas fa-broom"></i> Baskıyı Temizle
-          </button>
-
-          <button type="button" class="enhanced-recovery-remove-visible">
-            <i class="fas fa-eye-slash"></i> Görünür Feature'ı Kaldır
-          </button>
-        </div>
-      </section>
+        <footer class="er-footer">
+          <span class="er-hint"><i class="fas fa-check"></i> Değişiklikler kendiliğinden kaydedilir</span>
+          <button type="button" class="enhanced-recovery-test"><i class="fas fa-vial"></i> Şimdi dene</button>
+        </footer>
+      </div>
     </div>
   `;
 
-  tab.querySelector(".enhanced-recovery-save")?.addEventListener("click", async () => {
-    await saveConfigFromTab(actor, tab);
+  // Gelişmiş bölümünün açık/kapalı durumu yeniden çizimde korunur.
+  const advanced = tab.querySelector(".er-advanced");
+  if (advanced) {
+    advanced.open = RECOVERY_ADVANCED_OPEN.has(actor.uuid);
+    advanced.addEventListener("toggle", () => {
+      if (advanced.open) RECOVERY_ADVANCED_OPEN.add(actor.uuid);
+      else RECOVERY_ADVANCED_OPEN.delete(actor.uuid);
+    });
+  }
+
+  // Otomatik kaydetme: bir alan değişince kaydedilir ve sekme yeniden çizilir.
+  tab.querySelector(".er")?.addEventListener("change", async event => {
+    if (!event.target.matches("input, select")) return;
+    await saveConfigFromTab(actor, tab, { notify: false });
     sheet.render(false);
   });
 
   tab.querySelector(".enhanced-recovery-test")?.addEventListener("click", async () => {
-    await saveConfigFromTab(actor, tab);
+    await saveConfigFromTab(actor, tab, { notify: false });
     await processRecovery(actor, getConfig(actor).trigger);
     sheet.render(false);
   });
@@ -666,17 +690,12 @@ async function renderRecoveryTab(sheet, actor, tab) {
 
   tab.querySelector(".enhanced-recovery-remove-visible")?.addEventListener("click", async () => {
     await removeVisibleFeature(actor);
-    ui.notifications.info(`${actor.name} üzerindeki görünür Enhanced Recovery feature kaldırıldı.`);
-    sheet.render(false);
-  });
-
-  tab.querySelector('[name="enabled"]')?.addEventListener("change", async () => {
-    await saveConfigFromTab(actor, tab);
+    ui.notifications.info(`${actor.name} üzerindeki görünür Enhanced Recovery özelliği kaldırıldı.`);
     sheet.render(false);
   });
 }
 
-async function saveConfigFromTab(actor, tab) {
+async function saveConfigFromTab(actor, tab, { notify = true } = {}) {
   const blockedBy = [...tab.querySelectorAll('[name="blockedBy"]:checked')].map(input => input.value);
 
   const config = normalizeConfig({
@@ -684,7 +703,7 @@ async function saveConfigFromTab(actor, tab) {
     amount: tab.querySelector('[name="amount"]')?.value ?? 10,
     formula: tab.querySelector('[name="formula"]')?.value ?? "1d6",
     mode: tab.querySelector('[name="mode"]')?.value ?? "fixed",
-    trigger: tab.querySelector('[name="trigger"]')?.value ?? "start",
+    trigger: tab.querySelector('[name="trigger"]:checked')?.value ?? "start",
     blockedBy,
     customBlockedBy: tab.querySelector('[name="customBlockedBy"]')?.value ?? "",
     minHp: tab.querySelector('[name="minHp"]')?.value ?? 1,
@@ -700,7 +719,7 @@ async function saveConfigFromTab(actor, tab) {
   if (config.enabled && config.createVisibleFeature) await ensureVisibleFeature(actor, config);
   if (!config.enabled) await clearSuppression(actor);
 
-  ui.notifications.info(`${actor.name} için Enhanced Recovery kaydedildi.`);
+  if (notify) ui.notifications.info(`${actor.name} için Enhanced Recovery kaydedildi.`);
 }
 
 const RECOVERY_API = {
