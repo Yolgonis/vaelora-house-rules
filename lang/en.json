@@ -171,7 +171,7 @@
       "ChatCard": "State was saved, but the chat card could not be created.",
       "Unexpected": "An unexpected Consequences error occurred.",
       "WrongSystem": "Consequences only supports D&D5e 5.x roll automation. Mechanical automation has been disabled.",
-      "WrongDndVersion": "Consequences targets D&D5e 5.x. Roll automation has been disabled for this system version."
+      "WrongDndVersion": "Consequences targets D&D5e 5.x and 6.x. Roll automation has been disabled for this system version."
     },
     "Rules": {
       "TableRule": {

@@ -17,7 +17,7 @@ function requiredActor(actorOrId) {
 
 function ensureSupportedSystem() {
   const supported = game.system.id === "dnd5e"
-    && Number.parseInt(String(game.system.version).split(".")[0], 10) === 5;
+    && [5, 6].includes(Number.parseInt(String(game.system.version).split(".")[0], 10));
   if ( supported ) return true;
   ui.notifications.warn(game.system.id === "dnd5e"
     ? "SABKC.Errors.WrongDndVersion" : "SABKC.Errors.WrongSystem", { localize: true });

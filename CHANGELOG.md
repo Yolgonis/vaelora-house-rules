@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- Foundry v14 ve D&D5e 6 desteği: Söz Ağızdan Bir Kere Çıkar artık D&D5e 6.x sürümünde de zar otomasyonunu açıyor (önce yalnızca 5.x).
+- D&D5e 6 zar parçalarını pre-roll hook'larından sonra kurduğu için -1d4 cezası zara eklenmiyordu; ceza artık kurulmuş zarın terimlerine ekleniyor. Disadvantage ve yük harcama zaten çalışıyordu.
+
 ## 1.1.0
 
 - Enhanced Recovery sekmesi yeniden tasarlandı: başlıkta tek cümlelik özet ("+10 HP / tur") ve açma/kapama anahtarı; baskılanma, son yenilenme ve görünür özellik durum çiplerinde.

@@ -17,7 +17,7 @@ import { initializeSocketManager } from "./socket-manager.mjs";
 import { getPenaltyState, migrateAllActorStates } from "./state-manager.mjs";
 
 function isDnd5e5() {
-  return game.system.id === "dnd5e" && Number.parseInt(String(game.system.version).split(".")[0], 10) === 5;
+  return game.system.id === "dnd5e" && [5, 6].includes(Number.parseInt(String(game.system.version).split(".")[0], 10));
 }
 
 function registerSceneControl() {

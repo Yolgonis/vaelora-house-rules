@@ -252,7 +252,19 @@ function onPostRollConfiguration(rolls, config) {
       transaction.rollConfigured = false;
       return;
     }
-    for ( const roll of rolls ) forceDisadvantage(roll);
+    for ( let i = 0; i < rolls.length; i++ ) {
+      // D&D5e 6 builds the roll parts after the pre-roll hooks, so the d4 part added in
+      // prepareRollConfig can be missing here. Append it to the built roll's terms: the roll object
+      // must stay the same, because D&D5e evaluates the rolls it already holds.
+      const roll = rolls[i];
+      const configuredParts = config.rolls?.[i]?.parts ?? [];
+      if ( transaction.useD4 && roll?.d20 && !configuredParts.includes(`@${D4_DATA_KEY}`)
+        && !String(roll.formula).includes("SABKC") ) {
+        roll.terms.push(...new Roll(`0 ${D4_FORMULA.startsWith("-") ? "" : "+ "}${D4_FORMULA}`).terms.slice(1));
+        roll.resetFormula();
+      }
+      forceDisadvantage(roll);
+    }
     transaction.rolls = rolls;
     transaction.rollConfigured = true;
     logger.debug("configured roll forced to disadvantage", { transactionId: transaction.id });
