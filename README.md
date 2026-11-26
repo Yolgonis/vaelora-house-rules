@@ -30,6 +30,18 @@ npm test
 - dnd5e 5.3.3
 - Türkçe ve İngilizce arayüz (Enhanced Recovery sekmesi Türkçe/İngilizce karışık, eski modüldeki gibi).
 
+## Kurulum
+
+Foundry'de **Add-on Modules → Install Module** ekranında, alttaki **Manifest URL** alanına şunu yapıştırın:
+
+```
+https://github.com/Yolgonis/vaelora-house-rules/releases/latest/download/module.json
+```
+
+## Lisans
+
+MIT — ayrıntılar için `LICENSE` dosyasına bakın.
+
 ## Yazar
 
 Yolgonis

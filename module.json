@@ -46,5 +46,10 @@
       "path": "lang/en.json"
     }
   ],
-  "socket": true
+  "socket": true,
+  "license": "LICENSE",
+  "url": "https://github.com/Yolgonis/vaelora-house-rules",
+  "bugs": "https://github.com/Yolgonis/vaelora-house-rules/issues",
+  "manifest": "https://github.com/Yolgonis/vaelora-house-rules/releases/latest/download/module.json",
+  "download": "https://github.com/Yolgonis/vaelora-house-rules/releases/download/v1.1.1/module.zip"
 }
